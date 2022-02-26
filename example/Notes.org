@@ -1,0 +1,25 @@
+#+TITLE: Notes
+
+* Global
+- Canvas animation cube
+- Rotation du cube avec la souris
+- Liens affichés qui change avec la couleur dominante
+
+[[file:poc.png]]
+
+* Fonctionnement
+- Inputs:
+  + mousedown
+  + mouseup
+  + mousemove
+
+- JS:
+  + mousedown : updating true
+  + mouseup : updating false - inertie send coordinate Rust
+  + mousemove : send coordinate Rust
+  + Get byte array to display
+  + get byte array most color to display link category
+
+- Rust:
+  + Receive x, y
+  + Compute bytearray
