@@ -3,6 +3,37 @@ use euclid::*;
 pub struct WorldSpace;
 pub type WorldPoint = Point3D<f32, WorldSpace>;
 
+// Used to construct cube edges
+pub const CUBE_IDENTITY_EDGES: &'static [(f32, f32, f32)] = &[
+    (-1.0, -1.0, -1.0),
+    (1.0, -1.0, -1.0),
+    (-1.0, 1.0, -1.0),
+    (1.0, 1.0, -1.0),
+    (-1.0, -1.0, 1.0),
+    (1.0, -1.0, 1.0),
+    (-1.0, 1.0, 1.0),
+    (1.0, 1.0, 1.0),
+];
+
+// Adjacency list
+pub const CUBE_VERTICES_INDEX: &'static [&'static [u8]] = &[
+    &[1, 4],
+    &[3, 5],
+    &[0, 6],
+    &[2, 7],
+    &[7, 4],
+    &[4, 7],
+];
+
+pub const CUBE_FACES: &'static [(u8, u8, u8, u8)] = &[
+    (4, 5, 1, 0),
+    (6, 7, 3, 2),
+    (5, 7, 3, 1),
+    (6, 4, 0, 2),
+    (6, 7, 5, 4),
+    (2, 3, 1, 0),
+];
+
 pub fn area(x1: f32, y1: f32, x2: f32, y2: f32, x3: f32, y3: f32) -> f32 {
     let value = (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0;
     value.abs()
@@ -34,7 +65,12 @@ pub fn check_inside_rectangle(
 }
 
 // https://rosettacode.org/wiki/Bitmap/Bresenham%27s_line_algorithm#Rust
-pub fn get_lines_coordinates(x1f: f32, y1f: f32, x2f: f32, y2f: f32) -> Vec<Point2D<f32, WorldSpace>> {
+pub fn get_lines_coordinates(
+    x1f: f32,
+    y1f: f32,
+    x2f: f32,
+    y2f: f32,
+) -> Vec<Point2D<f32, WorldSpace>> {
     let mut coordinates: Vec<Point2D<f32, WorldSpace>> = Vec::new();
     let x1 = x1f as i32;
     let y1 = y1f as i32;

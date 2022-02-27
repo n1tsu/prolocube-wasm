@@ -1,42 +1,39 @@
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct Pixel {
-    r: u8,
-    g: u8,
-    b: u8,
-    a: u8,
+use crate::pixel::*;
+use crate::cube::*;
+
+pub struct Canvas {
+    width: i32,
+    height: i32,
+    background: Pixel,
+    pixels: Vec<Pixel>,
+    cubes: Vec<Cube>,
 }
 
-pub const BLACK_PIXEL: Pixel = Pixel {
-    r: 0,
-    g: 0,
-    b: 0,
-    a: 255,
-};
+impl Canvas {
+    pub fn new(width: i32, height: i32, background: Pixel) -> Canvas {
+        let pixels = Vec::new();
+        let cubes = Vec::new();
+        Canvas {
+            width,
+            height,
+            background,
+            pixels,
+            cubes,
+        }
+    }
 
-pub const WHITE_PIXEL: Pixel = Pixel {
-    r: 255,
-    g: 255,
-    b: 255,
-    a: 255,
-};
+    pub fn add_cube(&mut self, cube: Cube) {
+        self.cubes.push(cube);
+    }
 
-pub const RED_PIXEL: Pixel = Pixel {
-    r: 255,
-    g: 0,
-    b: 0,
-    a: 255,
-};
+    pub fn rotate(&mut self, roll: f32, pitch: f32, yaw: f32) {
+        for cube in &mut self.cubes {
+            cube.rotate(roll, pitch, yaw);
+        }
+    }
 
-pub const BLUE_PIXEL: Pixel = Pixel {
-    r: 0,
-    g: 0,
-    b: 255,
-    a: 255,
-};
-
-pub const GREEN_PIXEL: Pixel = Pixel {
-    r: 0,
-    g: 255,
-    b: 0,
-    a: 255,
-};
+    pub fn render(&self) -> *const Pixel {
+        // TODO modify pixel according to cubes
+        self.pixels.as_ptr()
+    }
+}
