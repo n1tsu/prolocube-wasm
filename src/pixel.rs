@@ -6,6 +6,11 @@ pub struct Pixel {
     pub a: u8,
 }
 
+pub struct DepthPixel {
+    pub depth: f32,
+    pub pixel: Pixel,
+}
+
 pub const BLACK_PIXEL: Pixel = Pixel {
     r: 0,
     g: 0,
@@ -36,6 +41,20 @@ pub const BLUE_PIXEL: Pixel = Pixel {
 
 pub const GREEN_PIXEL: Pixel = Pixel {
     r: 0,
+    g: 255,
+    b: 0,
+    a: 255,
+};
+
+pub const ORANGE_PIXEL: Pixel = Pixel {
+    r: 255,
+    g: 128,
+    b: 0,
+    a: 255,
+};
+
+pub const YELLOW_PIXEL: Pixel = Pixel {
+    r: 255,
     g: 255,
     b: 0,
     a: 255,

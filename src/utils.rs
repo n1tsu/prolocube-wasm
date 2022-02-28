@@ -1,7 +1,13 @@
 use euclid::*;
+use crate::pixel::*;
 
 pub struct WorldSpace;
 pub type WorldPoint = Point3D<f32, WorldSpace>;
+
+pub struct WorldPointColored {
+    point: WorldPoint,
+    pixel: Pixel,
+}
 
 // Used to construct cube edges
 pub const CUBE_IDENTITY_EDGES: &'static [(f32, f32, f32)] = &[
@@ -26,12 +32,21 @@ pub const CUBE_VERTICES_INDEX: &'static [&'static [u8]] = &[
 ];
 
 pub const CUBE_FACES: &'static [(u8, u8, u8, u8)] = &[
-    (4, 5, 1, 0),
-    (6, 7, 3, 2),
-    (5, 7, 3, 1),
-    (6, 4, 0, 2),
-    (6, 7, 5, 4),
-    (2, 3, 1, 0),
+    (4, 5, 1, 0), // Front
+    (6, 7, 3, 2), // Back
+    (5, 7, 3, 1), // Right
+    (6, 4, 0, 2), // Left
+    (6, 7, 5, 4), // Up
+    (2, 3, 1, 0), // Down
+];
+
+pub const COLOR_FACES: &'static [Pixel] = &[
+    BLUE_PIXEL,
+    GREEN_PIXEL,
+    RED_PIXEL,
+    ORANGE_PIXEL,
+    YELLOW_PIXEL,
+    WHITE_PIXEL,
 ];
 
 pub fn area(x1: f32, y1: f32, x2: f32, y2: f32, x3: f32, y3: f32) -> f32 {

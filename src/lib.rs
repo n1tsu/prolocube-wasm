@@ -32,7 +32,7 @@ impl Prolocube {
             a : bg_a,
         };
         let mut canvas = Canvas::new(width, width, background);
-        let cube = Cube::new((width / 2) as f32, 0.0, 0.0, 0.0);
+        let cube = Cube::new((width / 2) as f32, (width / 2) as f32, (width / 2) as f32, (width / 2) as f32);
 
         canvas.add_cube(cube);
 
@@ -45,7 +45,7 @@ impl Prolocube {
         self.canvas.rotate(roll, pitch, yaw);
     }
 
-    pub fn render(&self) -> *const Pixel {
+    pub fn render(&mut self) -> *const Pixel {
         self.canvas.render()
     }
 }

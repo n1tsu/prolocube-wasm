@@ -11,8 +11,13 @@ pub struct Canvas {
 
 impl Canvas {
     pub fn new(width: i32, height: i32, background: Pixel) -> Canvas {
-        let pixels = Vec::new();
+        let mut pixels = Vec::new();
         let cubes = Vec::new();
+
+        for pixel in 0..(width * height) {
+            pixels.push(background)
+        }
+
         Canvas {
             width,
             height,
@@ -32,8 +37,16 @@ impl Canvas {
         }
     }
 
-    pub fn render(&self) -> *const Pixel {
+    pub fn render(&mut self) -> *const Pixel {
         // TODO modify pixel according to cubes
+        for cube in &self.cubes {
+            let mut count = 0;
+            for depth_pixel in cube.render(self.width, self.height) {
+                self.pixels[count] = depth_pixel.pixel;
+                count += 1;
+            }
+        }
+
         self.pixels.as_ptr()
     }
 }

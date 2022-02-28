@@ -1,4 +1,5 @@
 use crate::utils::*;
+use crate::pixel::*;
 use euclid::*;
 
 // type Face = (WorldPoint, WorldPoint, WorldPoint, WorldPoint);
@@ -8,6 +9,7 @@ pub struct Cube {
     edges: Vec<WorldPoint>,
     vertices: Vec<Vec<u8>>,
     faces: Vec<(u8, u8, u8, u8)>,
+    color_faces: Vec<Pixel>,
 }
 
 impl Cube {
@@ -32,7 +34,8 @@ impl Cube {
             vertices.push(vec_points);
         }
         let faces = CUBE_FACES.to_vec();
-        Cube { width, edges, vertices, faces}
+        let color_faces = COLOR_FACES.to_vec();
+        Cube { width, edges, vertices, faces, color_faces}
     }
 
     pub fn rotate(&mut self, roll: f32, pitch: f32, yaw: f32) {
@@ -50,9 +53,9 @@ impl Cube {
         self.edges = rotated_edges;
     }
 
-    pub fn render(&self, canvas_width: i32, canvas_height: i32) -> Vec<WorldPoint> {
+    pub fn render(&self, canvas_width: i32, canvas_height: i32) -> Vec<DepthPixel> {
         // let mut pixel_vertices = Vec::new();
-        // let mut pixel_faces = Vec::new();
+        let mut pixel_faces = Vec::new();
         let mut pixel_edges = Vec::new();
 
         for &coords in &self.edges {
@@ -77,44 +80,55 @@ impl Cube {
             }
             face_index += 1;
         }
-        pixel_edges
+
+        // Fill depth pixels
+        // TODO refacto hard
+        let mut count = 0;
+        for (depth, index) in max_depth_faces {
+            for pixel_index in 0..(canvas_width * canvas_height) {
+                let x = (pixel_index % canvas_width) as f32;
+                let y = (pixel_index / canvas_width) as f32;
+                let x1 = self.edges[self.faces[index].0 as usize].x;
+                let y1 = self.edges[self.faces[index].0 as usize].y;
+                let x2 = self.edges[self.faces[index].1 as usize].x;
+                let y2 = self.edges[self.faces[index].1 as usize].y;
+                let x3 = self.edges[self.faces[index].2 as usize].x;
+                let y3 = self.edges[self.faces[index].2 as usize].y;
+                let x4 = self.edges[self.faces[index].3 as usize].x;
+                let y4 = self.edges[self.faces[index].3 as usize].y;
+                if check_inside_rectangle(x1, y1, x2, y2, x3, y3, x4, y4, x, y) {
+                    if count == 0 {
+                        let depth_pixel = DepthPixel {
+                            depth: depth,
+                            pixel: self.color_faces[index],
+                        };
+                        pixel_faces.push(depth_pixel);
+                    } else {
+                        if pixel_faces[pixel_index as usize].depth < depth {
+                            pixel_faces[pixel_index as usize] = DepthPixel {
+                                depth: depth,
+                                pixel: self.color_faces[index],
+                            };
+                        }
+                    }
+                } else {
+                    if count == 0 {
+                        let depth_pixel = DepthPixel {
+                            depth: f32::MIN,
+                            pixel: BLACK_PIXEL,
+                        };
+                        pixel_faces.push(depth_pixel);
+                    }
+                }
+            }
+            count += 1;
+        }
+
+        pixel_faces
     }
 }
 
 //     pub fn pixels(&mut self, roll_d: f32, pitch_d: f32, yaw_d: f32) -> *const Pixel {
-//         let mut draw_coords = Vec::new();
-
-//         for &coords in &edge_coords {
-//             draw_coords.push(coords);
-//         }
-
-//         let mut count_pixel = 0.0;
-//         for pixel in &mut self.pixels {
-//             let a = edge_coords[0];
-//             let b = edge_coords[1];
-//             let c = edge_coords[3];
-//             let d = edge_coords[2];
-//             let x = count_pixel % (self.width * 2.0);
-//             let y = count_pixel / (self.width * 2.0);
-//             if check_inside_rectangle(
-//                 a.x + self.width,
-//                 a.y + self.width,
-//                 b.x + self.width,
-//                 b.y + self.width,
-//                 c.x + self.width,
-//                 c.y + self.width,
-//                 d.x + self.width,
-//                 d.y + self.width,
-//                 x,
-//                 y,
-//             ) {
-//                 *pixel = GREEN_PIXEL;
-//             } else {
-//                 *pixel = BLACK_PIXEL;
-//             }
-//             count_pixel += 1.0;
-//         }
-
 //         let fbl = vec![1, 2, 4];
 //         let fbr = vec![3, 5];
 //         let bbl = vec![3, 6];
