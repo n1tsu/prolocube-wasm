@@ -1,5 +1,5 @@
-use crate::pixel::*;
 use crate::cube::*;
+use crate::pixel::*;
 
 pub struct Canvas {
     width: i32,

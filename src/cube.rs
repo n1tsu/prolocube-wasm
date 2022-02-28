@@ -1,5 +1,5 @@
-use crate::utils::*;
 use crate::pixel::*;
+use crate::utils::*;
 use euclid::*;
 
 // type Face = (WorldPoint, WorldPoint, WorldPoint, WorldPoint);
@@ -35,14 +35,21 @@ impl Cube {
         }
         let faces = CUBE_FACES.to_vec();
         let color_faces = COLOR_FACES.to_vec();
-        Cube { width, edges, vertices, faces, color_faces}
+        Cube {
+            width,
+            edges,
+            vertices,
+            faces,
+            color_faces,
+        }
     }
 
     pub fn rotate(&mut self, roll: f32, pitch: f32, yaw: f32) {
         let angle_roll = Angle::degrees(roll);
         let angle_pitch = Angle::degrees(pitch);
         let angle_yaw = Angle::degrees(yaw);
-        let rotation = Rotation3D::<f32, WorldSpace, WorldSpace>::euler(angle_roll, angle_pitch, angle_yaw);
+        let rotation =
+            Rotation3D::<f32, WorldSpace, WorldSpace>::euler(angle_roll, angle_pitch, angle_yaw);
 
         // I don't find inplace rotation in doc
         let mut rotated_edges = Vec::new();
@@ -64,21 +71,36 @@ impl Cube {
 
         // remove unvisible faces
         // vec![(depth, index)]
-        let mut max_depth_faces = vec![(f32::MIN, 0), (f32::MIN, 0), (f32::MIN, 0)];
-        let mut face_index = 0;
+        // let mut max_depth_faces = vec![
+        //     (f32::MIN, 0),
+        //     (f32::MIN, 0),
+        //     (f32::MIN, 0),
+        // ];
+        // let mut face_index = 0;
+        // for face in &self.faces {
+        //     let depth = self.edges[face.0 as usize].z
+        //         + self.edges[face.1 as usize].z
+        //         + self.edges[face.2 as usize].z
+        //         + self.edges[face.3 as usize].z;
+        //     for y in 0..3 {
+        //         if depth > max_depth_faces[y].0 {
+        //             max_depth_faces[y].0 = depth;
+        //             max_depth_faces[y].1 = face_index;
+        //             break;
+        //         }
+        //     }
+        //     face_index += 1;
+        // }
+
+        let mut index = 0;
+        let mut max_depth_faces = Vec::new();
         for face in &self.faces {
-            let depth = self.edges[face.0 as usize].z +
-                self.edges[face.1 as usize].z +
-                self.edges[face.2 as usize].z +
-                self.edges[face.3 as usize].z;
-            for y in 0..3 {
-                if depth > max_depth_faces[y].0 {
-                    max_depth_faces[y].0 = depth;
-                    max_depth_faces[y].1 = face_index;
-                    break;
-                }
-            }
-            face_index += 1;
+            let depth = self.edges[face.0 as usize].z
+                + self.edges[face.1 as usize].z
+                + self.edges[face.2 as usize].z
+                + self.edges[face.3 as usize].z;
+            max_depth_faces.push((depth, index));
+            index += 1;
         }
 
         // Fill depth pixels

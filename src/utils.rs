@@ -1,5 +1,5 @@
-use euclid::*;
 use crate::pixel::*;
+use euclid::*;
 
 pub struct WorldSpace;
 pub type WorldPoint = Point3D<f32, WorldSpace>;
@@ -22,14 +22,8 @@ pub const CUBE_IDENTITY_EDGES: &'static [(f32, f32, f32)] = &[
 ];
 
 // Adjacency list
-pub const CUBE_VERTICES_INDEX: &'static [&'static [u8]] = &[
-    &[1, 4],
-    &[3, 5],
-    &[0, 6],
-    &[2, 7],
-    &[7, 4],
-    &[4, 7],
-];
+pub const CUBE_VERTICES_INDEX: &'static [&'static [u8]] =
+    &[&[1, 4], &[3, 5], &[0, 6], &[2, 7], &[7, 4], &[4, 7]];
 
 pub const CUBE_FACES: &'static [(u8, u8, u8, u8)] = &[
     (4, 5, 1, 0), // Front

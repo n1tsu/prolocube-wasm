@@ -1,0 +1,37 @@
+#+TITLE: README
+
+* Prolocube
+Ugly rubix cube/prologin logo displayed in WASM-Rust.  
+
+* To test
+- Compile wasm
+#+begin_src 
+wasm-pack build
+#+end_src
+
+- Create npm application
+#+begin_src shell
+npm init wasm-app www
+#+end_src
+
+- Add wasm dependency (*www/package.json*)
+#+begin_src json
+  "dependencies": {
+    "prolocube-wasm": "file:../pkg"
+  },
+#+end_src
+
+- Install dependency
+#+begin_src shell
+npm install
+#+end_src
+
+- Copy html/js files
+#+begin_src shell
+cp test/index.{js,html} www
+#+end_src
+
+- Start application (*localhost:8080*)
+#+begin_src shell
+npm run start
+#+end_src

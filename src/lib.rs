@@ -1,7 +1,7 @@
-use wasm_bindgen::prelude::*;
-use crate::render::*;
-use crate::pixel::*;
 use crate::cube::*;
+use crate::pixel::*;
+use crate::render::*;
+use wasm_bindgen::prelude::*;
 
 extern crate web_sys;
 
@@ -16,7 +16,6 @@ mod utils;
 //     }
 // }
 
-
 #[wasm_bindgen]
 pub struct Prolocube {
     canvas: Canvas,
@@ -24,21 +23,24 @@ pub struct Prolocube {
 
 #[wasm_bindgen]
 impl Prolocube {
-    pub fn new(width: i32,  bg_r: u8, bg_g: u8, bg_b: u8, bg_a: u8) -> Prolocube {
+    pub fn new(width: i32, bg_r: u8, bg_g: u8, bg_b: u8, bg_a: u8) -> Prolocube {
         let background = Pixel {
-            r : bg_r,
-            g : bg_g,
-            b : bg_b,
-            a : bg_a,
+            r: bg_r,
+            g: bg_g,
+            b: bg_b,
+            a: bg_a,
         };
         let mut canvas = Canvas::new(width, width, background);
-        let cube = Cube::new((width / 2) as f32, (width / 2) as f32, (width / 2) as f32, (width / 2) as f32);
+        let cube = Cube::new(
+            (width / 2) as f32,
+            (width / 2) as f32,
+            (width / 2) as f32,
+            (width / 2) as f32,
+        );
 
         canvas.add_cube(cube);
 
-        Prolocube {
-            canvas,
-        }
+        Prolocube { canvas }
     }
 
     pub fn rotate(&mut self, roll: f32, pitch: f32, yaw: f32) {
