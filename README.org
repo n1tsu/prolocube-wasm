@@ -3,6 +3,8 @@
 * Prolocube
 Ugly rubix cube/prologin logo displayed in WASM-Rust.  
 
+[[file:prolocube.png]]
+
 * To test
 - Compile wasm
 #+begin_src 
